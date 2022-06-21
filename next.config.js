@@ -7,10 +7,10 @@ const SentryWebpackPluginOptions = {
 
 const plugins = [
   nextConfig => {
-    if (process.env.VERCEL_ENV === "development") {
-      return {};
+    if (process.env.VERCEL_ENV === "production") {
+      return withSentryConfig(nextConfig, SentryWebpackPluginOptions);
     }
-    return withSentryConfig(nextConfig, SentryWebpackPluginOptions);
+    return {};
   },
 ];
 
