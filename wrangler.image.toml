@@ -1,0 +1,16 @@
+name = "image"
+type = "javascript"
+zone_id = "4d1fa955d71d6b5e9eb19b2c3d098758"
+route = ""
+workers_dev = true
+compatibility_date = "2022-04-22"
+usage_model = "unbound"
+
+[build]
+command = "npm run build:image"
+
+[build.upload]
+format = "service-worker"
+
+[env.preview]
+workers_dev = true

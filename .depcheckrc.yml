@@ -1,0 +1,14 @@
+ignores:
+  - "@cloudflare/workers-types"
+  - "@cloudflare/wrangler"
+  - "@lightdotso/api"
+  - "@lightdotso/const"
+  - "@prisma/client"
+  - "@nestjs/axios"
+  - "@types/passport"
+  - graphql
+  - miniflare
+  - ts-loader
+  - webpack-cli
+  - zod
+  - zod-prisma

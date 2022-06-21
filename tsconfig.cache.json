@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "types": ["@cloudflare/workers-types"]
+  },
+  "exclude": ["node_modules", "dist", "test", "src", "test"],
+  "include": ["cache"]
+}
