@@ -13,7 +13,7 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
     logger = new Logger("seedPoap");
   }
   const poaps = await fetchPoapActions(address);
-  logger.log(`Found ${poaps.length} events`);
+  logger.log(`${Upstash.POAP}:::100:::${address} Found ${poaps.length} events`);
 
   const cmd = ["MSET"];
   for (const poap of poaps) {
@@ -51,7 +51,13 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
     upstashRest(cmd),
   ]);
 
-  logger.log(`Created ${activityResult.count} activities on prisma`);
-  logger.log(`Created ${networkResult.count} networks on prisma`);
-  logger.log(`Resulted ${redisResult.result} on redis`);
+  logger.log(
+    `${Upstash.POAP}:::100:::${address} Created ${activityResult.count} activities on prisma`,
+  );
+  logger.log(
+    `${Upstash.POAP}:::100:::${address} Created ${networkResult.count} networks on prisma`,
+  );
+  logger.log(
+    `${Upstash.POAP}:::100:::${address} Resulted ${redisResult.result} on redis`,
+  );
 };

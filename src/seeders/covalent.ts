@@ -29,10 +29,10 @@ export const seedCovalent = async (
     );
 
     logger.log(
-      `Found ${txs[pageNumber].data.items.length} events on page ${pageNumber}`,
+      `${Upstash.COVALENT}:::${networkId}:::${address} Found ${txs[pageNumber].data.items.length} events on page ${pageNumber}`,
     );
 
-    const cmd = ["HMSET"];
+    const cmd = ["MSET"];
     for (const tx of txs[pageNumber].data.items) {
       cmd.push(
         `${Upstash.COVALENT}:::${networkId}:::${tx.tx_hash}`,
@@ -57,8 +57,12 @@ export const seedCovalent = async (
       upstashRest(cmd),
     ]);
 
-    logger.log(`Created ${prismaResult.count} activities on prisma`);
-    logger.log(`Resulted ${redisResult.result} on redis`);
+    logger.log(
+      `${Upstash.COVALENT}:::${networkId}:::${address} Created ${prismaResult.count} activities on prisma`,
+    );
+    logger.log(
+      `${Upstash.COVALENT}:::${networkId}:::${address} Resulted ${redisResult.result} on redis`,
+    );
     pageNumber++;
   } while (txs[pageNumber - 1]?.data?.pagination?.has_more && walk);
 };

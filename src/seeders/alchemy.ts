@@ -19,7 +19,9 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
   });
   const times = await Promise.all(timePromises);
 
-  logger.log(`Found ${events.result.transfers.length} events`);
+  logger.log(
+    `${Upstash.ALCHEMY}:::1:::${address} Found ${events.result.transfers.length} events`,
+  );
 
   const cmd = ["MSET"];
   for (const event of events.result.transfers) {
@@ -43,6 +45,10 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
     upstashRest(cmd),
   ]);
 
-  logger.log(`Created ${prismaResult.count} activities on prisma`);
-  logger.log(`Resulted ${redisResult.result} on redis`);
+  logger.log(
+    `${Upstash.ALCHEMY}:::1:::${address} Created ${prismaResult.count} activities on prisma`,
+  );
+  logger.log(
+    `${Upstash.ALCHEMY}:::1:::${address} Resulted ${redisResult.result} on redis`,
+  );
 };

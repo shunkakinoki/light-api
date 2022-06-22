@@ -27,7 +27,7 @@ export const seedOpensea = async (
     );
 
     logger.log(
-      `Found ${eventsList[pageNumber]?.asset_events?.length} events on page ${pageNumber}`,
+      `${Upstash.OPEN_SEA}:::1:::${address} Found ${eventsList[pageNumber]?.asset_events?.length} events on page ${pageNumber}`,
     );
 
     const cmd = ["MSET"];
@@ -67,8 +67,12 @@ export const seedOpensea = async (
       upstashRest(cmd),
     ]);
 
-    logger.log(`Created ${prismaResult.count} activities on prisma`);
-    logger.log(`Resulted ${redisResult.result} on redis`);
+    logger.log(
+      `${Upstash.OPEN_SEA}:::1:::${address} Created ${prismaResult.count} activities on prisma`,
+    );
+    logger.log(
+      `${Upstash.OPEN_SEA}:::1:::${address} Resulted ${redisResult.result} on redis`,
+    );
     pageNumber++;
   } while (eventsList[pageNumber - 1]?.next && walk);
 };

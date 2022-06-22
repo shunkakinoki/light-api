@@ -24,7 +24,9 @@ export const seedTintin = async (
     },
   );
 
-  logger.log(`Found ${tintinContractMapping.length} events`);
+  logger.log(
+    `${Upstash.TIN_TIN}:::${tintinChainId[network]} Found ${tintinContractMapping.length} events`,
+  );
 
   const chunk = (a, n) => {
     return [...Array(Math.ceil(a.length / n))].map((_, i) => {
@@ -58,7 +60,11 @@ export const seedTintin = async (
       upstashRest(cmd),
     ]);
 
-    logger.log(`Created ${prismaResult.count} activities on prisma`);
-    logger.log(`Resulted ${redisResult.result} on redis`);
+    logger.log(
+      `${Upstash.TIN_TIN}:::${tintinChainId[network]} Created ${prismaResult.count} activities on prisma`,
+    );
+    logger.log(
+      `${Upstash.TIN_TIN}:::${tintinChainId[network]} Resulted ${redisResult.result} on redis`,
+    );
   }
 };

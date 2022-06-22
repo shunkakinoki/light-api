@@ -16,7 +16,7 @@ export const seedFourbyte = async (logger?: LoggerService) => {
   let lastResult;
   do {
     try {
-      logger.log(`Fetching page ${baseUrl}${pageNum}`);
+      logger.log(`Fourbyte: Fetching page ${baseUrl}${pageNum}`);
 
       const result = await fetch(`${baseUrl}${pageNum}`, {
         headers: new Headers({
@@ -26,7 +26,7 @@ export const seedFourbyte = async (logger?: LoggerService) => {
       });
       const data: any = await result.json();
 
-      logger.log(`Found ${data.results.length} events on ${pageNum}`);
+      logger.log(`Fourbyte: Found ${data.results.length} events on ${pageNum}`);
 
       let entries = [];
       lastResult = data;
@@ -42,12 +42,11 @@ export const seedFourbyte = async (logger?: LoggerService) => {
           cmd.push(address, name);
         }
         const redisResult = await upstashRest(cmd);
-        logger.log(`Resulted ${redisResult.result} on redis`);
+        logger.log(`Fourbyte: Resulted ${redisResult.result} on redis`);
       } catch (err) {
         console.error(err);
       }
 
-      logger.log(`Created activities on page${pageNum}`);
       pageNum++;
     } catch (err) {
       console.error(err);

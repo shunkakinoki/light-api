@@ -13,7 +13,9 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
     logger = new Logger("seedSnapshot");
   }
   const votes = await fetchSnapshotVotes(address);
-  logger.log(`Found ${votes.votes.length} events`);
+  logger.log(
+    `${Upstash.SNAPSHOT}:::0:::${address} Found ${votes.votes.length} events`,
+  );
 
   const cmd = ["MSET"];
   for (const vote of votes.votes) {
@@ -48,7 +50,13 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
     upstashRest(cmd),
   ]);
 
-  logger.log(`Created ${activityResult.count} activities on prisma`);
-  logger.log(`Created ${networkResult.count} networks on prisma`);
-  logger.log(`Resulted ${redisResult.result} on redis`);
+  logger.log(
+    `${Upstash.SNAPSHOT}:::0:::${address} Created ${activityResult.count} activities on prisma`,
+  );
+  logger.log(
+    `${Upstash.SNAPSHOT}:::0:::${address} Created ${networkResult.count} networks on prisma`,
+  );
+  logger.log(
+    `${Upstash.SNAPSHOT}:::0:::${address} Resulted ${redisResult.result} on redis`,
+  );
 };
