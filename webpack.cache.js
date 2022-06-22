@@ -9,7 +9,7 @@ module.exports = {
     extensions: [".ts", ".tsx", ".js"],
   },
   output: {
-    filename: "worker.js",
+    filename: "./worker.js",
     path: path.join(__dirname, "dist"),
   },
   devtool: "cheap-module-source-map",

@@ -82,7 +82,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
     "winston": "^3.7.2",
-    "worktop": "^0.8.0-next.13",
+    "worktop": "0.8.0-next.14",
     "zod": "^3.17.3",
     "zod-prisma": "^0.5.4"
   },

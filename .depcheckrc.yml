@@ -15,6 +15,5 @@ ignores:
   - miniflare
   - ts-loader
   - webpack-cli
-  - worktop
   - zod
   - zod-prisma
