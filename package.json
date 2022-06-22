@@ -97,7 +97,7 @@
     "@types/passport": "^1.0.9",
     "@types/passport-http": "^0.3.9",
     "@types/react": "^18.0.14",
-    "cypress": "^10.1.0",
+    "cypress": "^10.2.0",
     "miniflare": "^2.5.1",
     "supertest": "^6.2.3",
     "ts-loader": "^9.3.0",
