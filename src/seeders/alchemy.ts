@@ -23,7 +23,7 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
 
   const cmd = ["MSET"];
   for (const event of events.result.transfers) {
-    cmd.push(`${Upstash.ALCHEMY}:::${event.hash}`, JSON.stringify(event));
+    cmd.push(`${Upstash.ALCHEMY}:::1:::${event.hash}`, JSON.stringify(event));
   }
 
   const [prismaResult, redisResult] = await Promise.all([

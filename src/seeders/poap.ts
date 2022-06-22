@@ -17,7 +17,10 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
 
   const cmd = ["MSET"];
   for (const poap of poaps) {
-    cmd.push(`${Upstash.POAP}:::${poap.tokenId}`, JSON.stringify(poap));
+    cmd.push(
+      `${Upstash.POAP}:::${poap.chain === "xdai" ? 100 : 1}:::${poap.tokenId}`,
+      JSON.stringify(poap),
+    );
   }
 
   const [activityResult, networkResult, redisResult] = await Promise.all([

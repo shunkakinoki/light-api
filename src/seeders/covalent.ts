@@ -18,6 +18,9 @@ export const seedCovalent = async (
   if (!logger) {
     logger = new Logger("seedCovalent");
   }
+  if (!networkId) {
+    networkId = 1;
+  }
   let pageNumber = 0;
   let txs: CovalentTransactions[] = [];
   do {
@@ -31,7 +34,10 @@ export const seedCovalent = async (
 
     const cmd = ["HMSET"];
     for (const tx of txs[pageNumber].data.items) {
-      cmd.push(`${Upstash.COVALENT}:::${tx.tx_hash}`, JSON.stringify(tx));
+      cmd.push(
+        `${Upstash.COVALENT}:::${networkId}:::${tx.tx_hash}`,
+        JSON.stringify(tx),
+      );
     }
 
     const [prismaResult, redisResult] = await Promise.all([
@@ -40,7 +46,7 @@ export const seedCovalent = async (
           return {
             address: castAddress(tx.from_address),
             category: null,
-            chainId: 1,
+            chainId: networkId,
             createdAt: new Date(tx.block_signed_at),
             id: tx.tx_hash,
             type: DataType.COVALENT,

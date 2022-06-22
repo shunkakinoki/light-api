@@ -17,7 +17,7 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
 
   const cmd = ["MSET"];
   for (const vote of votes.votes) {
-    cmd.push(`${Upstash.SNAPSHOT}:::${vote.id}`, JSON.stringify(vote));
+    cmd.push(`${Upstash.SNAPSHOT}:::0:::${vote.id}`, JSON.stringify(vote));
   }
 
   const [activityResult, networkResult, redisResult] = await Promise.all([

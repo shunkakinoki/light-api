@@ -32,8 +32,20 @@ export const seedOpensea = async (
 
     const cmd = ["MSET"];
     for (const event of eventsList[pageNumber].asset_events) {
+      if (
+        event?.transaction?.transaction_hash &&
+        event?.asset?.asset_contract?.address &&
+        event?.asset?.token_id
+      ) {
+        cmd.push(
+          `${Upstash.OPEN_SEA}:::1:::${event?.transaction?.transaction_hash}:::${event?.asset?.asset_contract?.address}:::${event?.asset?.token_id}`,
+          JSON.stringify(event),
+        );
+      }
       cmd.push(
-        `${Upstash.OPEN_SEA}:::${String(event.id)}`,
+        `${Upstash.OPEN_SEA}:::${
+          event?.transaction?.transaction_hash ? 1 : 0
+        }:::${String(event.id)}`,
         JSON.stringify(event),
       );
     }
@@ -44,9 +56,9 @@ export const seedOpensea = async (
           return {
             address: address,
             category: CategoryType.NFT,
-            chainId: 1,
+            chainId: event?.transaction?.transaction_hash ? 1 : 0,
             createdAt: new Date(event.event_timestamp),
-            id: String(event.id),
+            id: event?.transaction?.transaction_hash ?? String(event.id),
             type: DataType.OPENSEA,
           };
         }),
