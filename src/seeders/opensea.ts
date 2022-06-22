@@ -58,7 +58,7 @@ export const seedOpensea = async (
             category: CategoryType.NFT,
             chainId: event?.transaction?.transaction_hash ? 1 : 0,
             createdAt: new Date(event.event_timestamp),
-            id: event?.transaction?.transaction_hash ?? String(event.id),
+            id: String(event.id),
             type: DataType.OPENSEA,
           };
         }),
