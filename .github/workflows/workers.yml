@@ -50,3 +50,5 @@ jobs:
           sudo chown -R $USER:$USER ${{ github.workspace }}
           rm -rf .wrangler
       - uses: actions/checkout@v3
+        with:
+          path: apps/api
