@@ -1,3 +1,5 @@
+tmp.*
+
 src/generated
 prisma/.env
 prisma/zod
