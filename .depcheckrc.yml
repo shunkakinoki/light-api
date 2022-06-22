@@ -1,14 +1,20 @@
 ignores:
   - "@cloudflare/workers-types"
   - "@cloudflare/wrangler"
+  - "@ethersproject/abstract-provider"
+  - "@ethersproject/address"
+  - "@ethersproject/providers"
+  - "@lightdotso/queries"
   - "@lightdotso/api"
   - "@lightdotso/const"
   - "@prisma/client"
   - "@nestjs/axios"
   - "@types/passport"
+  - ethers-multicall
   - graphql
   - miniflare
   - ts-loader
   - webpack-cli
+  - worktop
   - zod
   - zod-prisma
