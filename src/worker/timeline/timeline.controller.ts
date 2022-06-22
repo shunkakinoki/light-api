@@ -8,10 +8,14 @@ import { castAddress } from "@lightdotso/api/utils/castAddress";
 export class TimelineController {
   constructor(@InjectQueue("timeline") private readonly timelineQueue: Queue) {}
 
-  @Get("/queue/:address")
-  async transcode(@Param("address") address: string) {
+  @Get("/queue/:address/:networkId")
+  async transcode(
+    @Param("address") address: string,
+    @Param("networkId") networkId: string,
+  ) {
     await this.timelineQueue.add("address", {
       address: castAddress(address),
+      networkId: networkId,
     });
   }
 }
