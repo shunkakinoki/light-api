@@ -1,0 +1,34 @@
+name: Fly
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+jobs:
+  fly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          repository: LightDotSo/LightDotSo
+      - uses: actions/checkout@v3
+        with:
+          path: apps/api
+      - uses: ./.github/actions/pnpm
+        with:
+          token: ${{ secrets.BOT_TOKEN }}
+      - run: |
+          pnpx turbo run build --scope=@lightdotso/api --include-dependencies --no-deps
+        env:
+          TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+      - if: github.event_name == 'pull_request'
+        run: flyctl deploy --config ./apps/api/fly.stg.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - if: github.event_name == 'push'
+        run: flyctl deploy --config ./apps/api/fly.toml
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
