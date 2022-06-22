@@ -2,11 +2,11 @@
   "name": "@lightdotso/api",
   "version": "0.0.0",
   "private": true,
-  "homepage": "https://github.com/LightDotSo/LightDotSo",
+  "homepage": "https://github.com/LightDotSo/api",
   "bugs": {
-    "url": "https://github.com/LightDotSo/LightDotSo/issues"
+    "url": "https://github.com/LightDotSo/api/issues"
   },
-  "repository": "https://github.com/LightDotSo/LightDotSo",
+  "repository": "https://github.com/LightDotSo/api",
   "license": "UNLICENSED",
   "author": "Light, Inc.",
   "main": "dist/worker.js",
