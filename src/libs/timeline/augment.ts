@@ -5,7 +5,7 @@ import { upstashRest } from "@lightdotso/api/libs/upstash";
 export const augmentTimeline = async (timeline: Timeline[]) => {
   const cmd = ["MGET"];
   for (const item of timeline) {
-    cmd.push(`${item.type.toLowerCase()}:::${item.id}`);
+    cmd.push(`${item.type.toLowerCase()}:::${item.chainId}:::${item.id}`);
   }
   const data = await upstashRest(cmd);
 
