@@ -21,6 +21,9 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  publicRuntimeConfig: {
+    env: process.env.VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_ENV,
+  },
   async headers() {
     return [
       {
