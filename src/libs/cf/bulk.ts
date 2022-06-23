@@ -20,7 +20,7 @@ export const bulkWrite = async (data: any): Promise<Response> => {
 
 export const bulkRead = async (keys: string[]) => {
   const CF_BULK_URL = `${
-    isProduction
+    process.env.DOPPLER_ENVIRONMENT === "production"
       ? "https://lightkv.net"
       : "https://kv-preview.lightdotso.workers.dev"
   }/${keys.join(",")}`;
