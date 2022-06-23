@@ -37,20 +37,24 @@ export const seedOpensea = async (
         event?.asset?.asset_contract?.address &&
         event?.asset?.token_id
       ) {
-        bulk.push({
-          key: `${Key.OPEN_SEA}:::1:::${event?.transaction?.transaction_hash}:::${event?.asset?.asset_contract?.address}:::${event?.asset?.token_id}`,
-          value: JSON.stringify(event),
-        });
+        bulkWrite([
+          {
+            key: `${Key.OPEN_SEA}:::1:::${event?.transaction?.transaction_hash}:::${event?.asset?.asset_contract?.address}:::${event?.asset?.token_id}`,
+            value: JSON.stringify(event),
+          },
+        ]);
       }
-      bulk.push({
-        key: `${Key.OPEN_SEA}:::${
-          event?.transaction?.transaction_hash ? 1 : 0
-        }:::${String(event.id)}`,
-        value: JSON.stringify(event),
-      });
+      bulkWrite([
+        {
+          key: `${Key.OPEN_SEA}:::${
+            event?.transaction?.transaction_hash ? 1 : 0
+          }:::${String(event.id)}`,
+          value: JSON.stringify(event),
+        },
+      ]);
     }
 
-    const [prismaResult, kvResult] = await Promise.all([
+    const [prismaResult] = await Promise.all([
       prisma.activity.createMany({
         data: eventsList[pageNumber].asset_events.map(event => {
           return {
@@ -64,15 +68,14 @@ export const seedOpensea = async (
         }),
         skipDuplicates: true,
       }),
-      bulkWrite(bulk),
     ]);
 
     logger.log(
       `${Key.OPEN_SEA}:::1:::${address} Created ${prismaResult.count} activities on prisma`,
     );
-    logger.log(
-      `${Key.OPEN_SEA}:::1:::${address} Resulted ${kvResult} on redis`,
-    );
+    // logger.log(
+    // `${Key.OPEN_SEA}:::1:::${address} Resulted ${kvResult.status} on kv`,
+    // );
     pageNumber++;
   } while (eventsList[pageNumber - 1]?.next && walk);
 };

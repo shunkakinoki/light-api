@@ -61,7 +61,7 @@ export const seedCovalent = async (
       `${Key.COVALENT}:::${networkId}:::${address} Created ${prismaResult.count} activities on prisma`,
     );
     logger.log(
-      `${Key.COVALENT}:::${networkId}:::${address} Resulted ${kvResult} on redis`,
+      `${Key.COVALENT}:::${networkId}:::${address} Resulted ${kvResult} on kv`,
     );
     pageNumber++;
   } while (txs[pageNumber - 1]?.data?.pagination?.has_more && walk);

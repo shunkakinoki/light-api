@@ -57,5 +57,5 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
   logger.log(
     `${Key.POAP}:::100:::${address} Created ${networkResult.count} networks on prisma`,
   );
-  logger.log(`${Key.POAP}:::100:::${address} Resulted ${kvResult} on redis`);
+  logger.log(`${Key.POAP}:::100:::${address} Resulted ${kvResult} on kv`);
 };

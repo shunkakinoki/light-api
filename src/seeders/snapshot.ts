@@ -59,5 +59,5 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
   logger.log(
     `${Key.SNAPSHOT}:::0:::${address} Created ${networkResult.count} networks on prisma`,
   );
-  logger.log(`${Key.SNAPSHOT}:::0:::${address} Resulted ${kvResult} on redis`);
+  logger.log(`${Key.SNAPSHOT}:::0:::${address} Resulted ${kvResult} on kv`);
 };
