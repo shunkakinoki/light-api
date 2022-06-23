@@ -3,9 +3,9 @@ import type { LoggerService } from "@nestjs/common";
 import { Logger } from "@nestjs/common";
 import { CategoryType, DataType } from "@prisma/client";
 
-import { Upstash } from "@lightdotso/api/config/upstash";
+import { Key } from "@lightdotso/api/config/key";
+import { bulkWrite } from "@lightdotso/api/libs/cf/bulk";
 import prisma from "@lightdotso/api/libs/prisma";
-import { upstashRest } from "@lightdotso/api/libs/upstash";
 import { castAddress } from "@lightdotso/api/utils/castAddress";
 
 export const seedSnapshot = async (address: string, logger?: LoggerService) => {
@@ -14,15 +14,18 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
   }
   const votes = await fetchSnapshotVotes(address);
   logger.log(
-    `${Upstash.SNAPSHOT}:::0:::${address} Found ${votes.votes.length} events`,
+    `${Key.SNAPSHOT}:::0:::${address} Found ${votes.votes.length} events`,
   );
 
-  const cmd = ["MSET"];
+  const bulk = [];
   for (const vote of votes.votes) {
-    cmd.push(`${Upstash.SNAPSHOT}:::0:::${vote.id}`, JSON.stringify(vote));
+    bulk.push({
+      key: `${Key.SNAPSHOT}:::0:::${vote.id}`,
+      value: JSON.stringify(vote),
+    });
   }
 
-  const [activityResult, networkResult, redisResult] = await Promise.all([
+  const [activityResult, networkResult, kvResult] = await Promise.all([
     prisma.activity.createMany({
       data: votes.votes.map(vote => {
         return {
@@ -47,16 +50,14 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
       }),
       skipDuplicates: true,
     }),
-    upstashRest(cmd),
+    bulkWrite(bulk),
   ]);
 
   logger.log(
-    `${Upstash.SNAPSHOT}:::0:::${address} Created ${activityResult.count} activities on prisma`,
+    `${Key.SNAPSHOT}:::0:::${address} Created ${activityResult.count} activities on prisma`,
   );
   logger.log(
-    `${Upstash.SNAPSHOT}:::0:::${address} Created ${networkResult.count} networks on prisma`,
+    `${Key.SNAPSHOT}:::0:::${address} Created ${networkResult.count} networks on prisma`,
   );
-  logger.log(
-    `${Upstash.SNAPSHOT}:::0:::${address} Resulted ${redisResult.result} on redis`,
-  );
+  logger.log(`${Key.SNAPSHOT}:::0:::${address} Resulted ${kvResult} on redis`);
 };

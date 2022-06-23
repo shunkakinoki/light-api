@@ -3,9 +3,9 @@ import { Logger } from "@nestjs/common";
 import type { LoggerService } from "@nestjs/common";
 import { CategoryType, DataType } from "@prisma/client";
 
-import { Upstash } from "@lightdotso/api/config/upstash";
+import { Key } from "@lightdotso/api/config/key";
+import { bulkWrite } from "@lightdotso/api/libs/cf/bulk";
 import prisma from "@lightdotso/api/libs/prisma";
-import { upstashRest } from "@lightdotso/api/libs/upstash";
 import { castAddress } from "@lightdotso/api/utils/castAddress";
 
 export const seedPoap = async (address: string, logger?: LoggerService) => {
@@ -13,17 +13,17 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
     logger = new Logger("seedPoap");
   }
   const poaps = await fetchPoapActions(address);
-  logger.log(`${Upstash.POAP}:::100:::${address} Found ${poaps.length} events`);
+  logger.log(`${Key.POAP}:::100:::${address} Found ${poaps.length} events`);
 
-  const cmd = ["MSET"];
+  const bulk = [];
   for (const poap of poaps) {
-    cmd.push(
-      `${Upstash.POAP}:::${poap.chain === "xdai" ? 100 : 1}:::${poap.tokenId}`,
-      JSON.stringify(poap),
-    );
+    bulk.push({
+      key: `${Key.POAP}:::${poap.chain === "xdai" ? 100 : 1}:::${poap.tokenId}`,
+      value: JSON.stringify(poap),
+    });
   }
 
-  const [activityResult, networkResult, redisResult] = await Promise.all([
+  const [activityResult, networkResult, kvResult] = await Promise.all([
     prisma.activity.createMany({
       data: poaps.map(poap => {
         return {
@@ -48,16 +48,14 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
       }),
       skipDuplicates: true,
     }),
-    upstashRest(cmd),
+    bulkWrite(bulk),
   ]);
 
   logger.log(
-    `${Upstash.POAP}:::100:::${address} Created ${activityResult.count} activities on prisma`,
+    `${Key.POAP}:::100:::${address} Created ${activityResult.count} activities on prisma`,
   );
   logger.log(
-    `${Upstash.POAP}:::100:::${address} Created ${networkResult.count} networks on prisma`,
+    `${Key.POAP}:::100:::${address} Created ${networkResult.count} networks on prisma`,
   );
-  logger.log(
-    `${Upstash.POAP}:::100:::${address} Resulted ${redisResult.result} on redis`,
-  );
+  logger.log(`${Key.POAP}:::100:::${address} Resulted ${kvResult} on redis`);
 };

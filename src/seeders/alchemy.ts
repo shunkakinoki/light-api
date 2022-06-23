@@ -3,10 +3,10 @@ import { Logger } from "@nestjs/common";
 import type { LoggerService } from "@nestjs/common";
 import { DataType } from "@prisma/client";
 
-import { Upstash } from "@lightdotso/api/config/upstash";
+import { Key } from "@lightdotso/api/config/key";
+import { bulkWrite } from "@lightdotso/api/libs/cf/bulk";
 import { provider } from "@lightdotso/api/libs/ethers/provider";
 import prisma from "@lightdotso/api/libs/prisma";
-import { upstashRest } from "@lightdotso/api/libs/upstash";
 import { castAddress } from "@lightdotso/api/utils/castAddress";
 
 export const seedAlchemy = async (address: string, logger?: LoggerService) => {
@@ -20,15 +20,17 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
   const times = await Promise.all(timePromises);
 
   logger.log(
-    `${Upstash.ALCHEMY}:::1:::${address} Found ${events.result.transfers.length} events`,
+    `${Key.ALCHEMY}:::1:::${address} Found ${events.result.transfers.length} events`,
   );
 
-  const cmd = ["MSET"];
-  for (const event of events.result.transfers) {
-    cmd.push(`${Upstash.ALCHEMY}:::1:::${event.hash}`, JSON.stringify(event));
-  }
+  const bulk = events.result.transfers.map(event => {
+    return {
+      key: `${Key.ALCHEMY}:::1:::${event.hash}`,
+      value: JSON.stringify(event),
+    };
+  });
 
-  const [prismaResult, redisResult] = await Promise.all([
+  const [prismaResult, kvResult] = await Promise.all([
     prisma.activity.createMany({
       data: events.result.transfers.map((tx, i) => {
         return {
@@ -42,13 +44,11 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
       }),
       skipDuplicates: true,
     }),
-    upstashRest(cmd),
+    bulkWrite(bulk),
   ]);
 
   logger.log(
-    `${Upstash.ALCHEMY}:::1:::${address} Created ${prismaResult.count} activities on prisma`,
+    `${Key.ALCHEMY}:::1:::${address} Created ${prismaResult.count} activities on prisma`,
   );
-  logger.log(
-    `${Upstash.ALCHEMY}:::1:::${address} Resulted ${redisResult.result} on redis`,
-  );
+  logger.log(`${Key.ALCHEMY}:::1:::${address} Resulted ${kvResult} on kv`);
 };
