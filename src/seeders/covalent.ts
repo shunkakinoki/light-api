@@ -34,10 +34,12 @@ export const seedCovalent = async (
 
     const bulk = [];
     for (const tx of txs[pageNumber].data.items) {
-      bulk.push({
-        key: `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`,
-        value: JSON.stringify(tx),
-      });
+      bulkWrite([
+        {
+          key: `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`,
+          value: JSON.stringify(tx),
+        },
+      ]);
     }
 
     const [prismaResult, kvResult] = await Promise.all([
