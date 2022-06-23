@@ -1,9 +1,3 @@
-import getConfig from "next/config";
-
-const { publicRuntimeConfig } = getConfig();
-
-export const isProduction = publicRuntimeConfig.env === "production";
-
 export const bulkWrite = async (data: any): Promise<Response> => {
   const CF_BULK_URL = `https://api.cloudflare.com/client/v4/accounts/${process.env.CF_ACCOUNT_ID}/storage/kv/namespaces/${process.env.KV_NAMESPACE_ID}/bulk`;
 
