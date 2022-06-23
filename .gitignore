@@ -1,11 +1,21 @@
+<<<<<<< HEAD
 tmp.*
 
 src/generated
 prisma/.env
 prisma/zod
+=======
+# Tmp
+tmp.*
+>>>>>>> main
 
-.sentryclirc
-.vercel
+# Cypress
+**/cypress/screenshots
+**/cypress/videos
+**/zod/**
+
+# Vercel
+**/.vercel/**
 
 # Logs
 logs

@@ -100,7 +100,7 @@
     "cypress": "^10.2.0",
     "miniflare": "^2.5.1",
     "supertest": "^6.2.3",
-    "ts-loader": "^9.3.0",
+    "ts-loader": "^9.3.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "webpack": "^5.73.0",
     "webpack-cli": "^4.10.0"
