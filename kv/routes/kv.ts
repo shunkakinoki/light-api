@@ -7,7 +7,7 @@ import { response } from "../utils/response";
 
 export const list = compose(async (req, context) => {
   const key = context.params.key as string;
-  const keys = key.split("___");
+  const keys = key.split(",");
   const cmd = keys.map(key => {
     return database.read(key);
   });
