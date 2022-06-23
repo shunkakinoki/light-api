@@ -21,7 +21,7 @@ export const bulkWrite = async (data: any): Promise<Response> => {
 export const bulkRead = async (keys: string[]) => {
   const CF_BULK_URL = `${
     isProduction
-      ? "https://kv.lightdotso.workers.dev"
+      ? "https://lightkv.net"
       : "https://kv-preview.lightdotso.workers.dev"
   }/${keys.join(",")}`;
 
