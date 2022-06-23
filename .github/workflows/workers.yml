@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        worker: ["cache", "key", "image"]
+        worker: ["cache", "kv", "image"]
       fail-fast: false
     steps:
       - uses: actions/checkout@v3
