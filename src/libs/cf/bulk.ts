@@ -11,3 +11,16 @@ export const bulkWrite = async (data: any): Promise<Response> => {
     body: JSON.stringify(data),
   });
 };
+
+export const bulkRead = async (keys: string[]) => {
+  const CF_BULK_URL = `https://kv-preview.lightdotso.workers.dev/${keys.join(
+    ",",
+  )}`;
+
+  return fetch(CF_BULK_URL, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+};
