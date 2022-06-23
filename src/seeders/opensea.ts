@@ -30,7 +30,6 @@ export const seedOpensea = async (
       `${Key.OPEN_SEA}:::1:::${address} Found ${eventsList[pageNumber]?.asset_events?.length} events on page ${pageNumber}`,
     );
 
-    const bulk = [];
     for (const event of eventsList[pageNumber].asset_events) {
       if (
         event?.transaction?.transaction_hash &&
