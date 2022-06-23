@@ -2,11 +2,11 @@ import type { LoggerService } from "@nestjs/common";
 import { Logger } from "@nestjs/common";
 import { AddressType } from "@prisma/client";
 
-import { Upstash } from "@lightdotso/api/config/upstash";
+import { Key } from "@lightdotso/api/config/key";
 import type { TinTinNetwork } from "@lightdotso/api/const/tintin";
 import { tintinURL, tintinChainId } from "@lightdotso/api/const/tintin";
+import { bulkWrite } from "@lightdotso/api/libs/cf/bulk";
 import prisma from "@lightdotso/api/libs/prisma";
-import { upstashRest } from "@lightdotso/api/libs/upstash";
 import { castAddress } from "@lightdotso/api/utils/castAddress";
 
 export const seedTintin = async (
@@ -25,7 +25,7 @@ export const seedTintin = async (
   );
 
   logger.log(
-    `${Upstash.TIN_TIN}:::${tintinChainId[network]} Found ${tintinContractMapping.length} events`,
+    `${Key.TIN_TIN}:::${tintinChainId[network]} Found ${tintinContractMapping.length} events`,
   );
 
   const chunk = (a, n) => {
@@ -39,12 +39,15 @@ export const seedTintin = async (
   for (const id in chunks) {
     const chunk = chunks[id];
 
-    const cmd = ["HMSET", Upstash.TIN_TIN];
+    const bulk = [];
     for (const tx of chunk) {
-      cmd.push(castAddress(tx.address), tx.name);
+      bulk.push({
+        key: `${Key.COVALENT}:::${tintinChainId[network]}:::${tx.tx_hash}`,
+        value: JSON.stringify(tx),
+      });
     }
 
-    const [prismaResult, redisResult] = await Promise.all([
+    const [prismaResult, kvResult] = await Promise.all([
       prisma.address.createMany({
         data: chunk.map(tx => {
           return {
@@ -57,14 +60,14 @@ export const seedTintin = async (
         }),
         skipDuplicates: true,
       }),
-      upstashRest(cmd),
+      bulkWrite(bulk),
     ]);
 
     logger.log(
-      `${Upstash.TIN_TIN}:::${tintinChainId[network]} Created ${prismaResult.count} activities on prisma`,
+      `${Key.TIN_TIN}:::${tintinChainId[network]} Created ${prismaResult.count} activities on prisma`,
     );
     logger.log(
-      `${Upstash.TIN_TIN}:::${tintinChainId[network]} Resulted ${redisResult.result} on redis`,
+      `${Key.TIN_TIN}:::${tintinChainId[network]} Resulted ${kvResult} on kv`,
     );
   }
 };

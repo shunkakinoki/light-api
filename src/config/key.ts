@@ -4,6 +4,7 @@ export const Keys = [
   "OPEN_SEA",
   "POAP",
   "SNAPSHOT",
+  "TIN_TIN",
 ] as const;
 
 export const Key: {
@@ -14,4 +15,5 @@ export const Key: {
   OPEN_SEA: "opensea",
   POAP: "poap",
   SNAPSHOT: "snapshot",
+  TIN_TIN: "tintin",
 };
