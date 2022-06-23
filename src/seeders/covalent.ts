@@ -34,7 +34,7 @@ export const seedCovalent = async (
     );
 
     const bulk = [];
-    const cmd = ["HMSET"];
+    const cmd = ["MSET"];
     for (const tx of txs[pageNumber].data.items) {
       const key = `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`;
       bulk.push({

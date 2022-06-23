@@ -40,7 +40,7 @@ export const seedTintin = async (
   for (const id in chunks) {
     const bulk = [];
     const chunk = chunks[id];
-    const cmd = ["HMSET", Key.TIN_TIN];
+    const cmd = ["MSET", Key.TIN_TIN];
     for (const tx of chunk) {
       bulk.push({
         key: `${Key.TIN_TIN}:::${tintinChainId[network]}:::${castAddress(
