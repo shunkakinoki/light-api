@@ -6,7 +6,7 @@ workers_dev = true
 compatibility_date = "2022-04-22"
 usage_model = "unbound"
 kv_namespaces = [
-  { binding = "DATABASE", id = "ca8e30ff68ce4c2c986278c6ba228b2e" },
+  { binding = "DATABASE", id = "17718fa1a6ef445ebee17dbafedbc429" },
 ]
 
 [build]
@@ -17,16 +17,15 @@ format = "service-worker"
 
 [vars]
 CF_ACCOUNT_ID = "4d1fa955d71d6b5e9eb19b2c3d098758"
-KV_NAMESPACE_ID = "ca8e30ff68ce4c2c986278c6ba228b2e"
 
 [env.preview]
 workers_dev = true
 kv_namespaces = [
-  { binding = "DATABASE", id = "bf8bf762f9924702b3c120b6fb2ddb73" },
+  { binding = "DATABASE", id = "b520946288804ce284e309c493119542" },
 ]
 
 [env.preview.vars]
-KV_NAMESPACE_ID = "ca8e30ff68ce4c2c986278c6ba228b2e"
+KV_NAMESPACE_ID = "17718fa1a6ef445ebee17dbafedbc429"
 
 [miniflare]
 kv_persist = true
