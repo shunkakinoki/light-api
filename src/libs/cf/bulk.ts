@@ -5,7 +5,7 @@ export const bulkWrite = async (data: any): Promise<Response> => {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "X-Auth-Email": "shunkakinoki@sentrei.com",
+      "X-Auth-Email": "shunkakinoki@light.so",
       "X-Auth-Key": process.env.CF_ACCOUNT_TOKEN,
     },
     body: JSON.stringify(data),
