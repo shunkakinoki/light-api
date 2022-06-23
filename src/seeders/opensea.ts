@@ -32,7 +32,7 @@ export const seedOpensea = async (
     );
 
     const bulk = [];
-    const cmd = ["SET"];
+    const cmd = ["MSET"];
     for (const event of eventsList[pageNumber].asset_events) {
       if (
         event?.transaction?.transaction_hash &&
