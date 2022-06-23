@@ -3,7 +3,7 @@ import type { Timeline } from "@prisma/client";
 import { bulkRead } from "@lightdotso/api/libs/cf/bulk";
 
 export const augmentTimeline = async (timeline: Timeline[]) => {
-  const cmd = [];
+  const cmd = ["MGET"];
   for (const item of timeline) {
     cmd.push(`${item.type.toLowerCase()}:::${item.chainId}:::${item.id}`);
   }

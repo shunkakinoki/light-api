@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-tmp.*
-
-src/generated
-prisma/.env
-prisma/zod
-=======
 # Tmp
 tmp.*
->>>>>>> main
 
 # Cypress
 **/cypress/screenshots

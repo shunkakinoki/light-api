@@ -7,6 +7,7 @@ import { Key } from "@lightdotso/api/config/key";
 import { bulkWrite } from "@lightdotso/api/libs/cf/bulk";
 import { provider } from "@lightdotso/api/libs/ethers/provider";
 import prisma from "@lightdotso/api/libs/prisma";
+import { upstashRest } from "@lightdotso/api/libs/upstash";
 import { castAddress } from "@lightdotso/api/utils/castAddress";
 
 export const seedAlchemy = async (address: string, logger?: LoggerService) => {
@@ -23,14 +24,17 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
     `${Key.ALCHEMY}:::1:::${address} Found ${events.result.transfers.length} events`,
   );
 
-  const bulk = events.result.transfers.map(event => {
-    return {
+  const bulk = [];
+  const cmd = ["MSET"];
+  for (const event of events.result.transfers) {
+    bulk.push({
       key: `${Key.ALCHEMY}:::1:::${event.hash}`,
       value: JSON.stringify(event),
-    };
-  });
+    });
+    cmd.push(`${Key.ALCHEMY}:::1:::${event.hash}`, JSON.stringify(event));
+  }
 
-  const [prismaResult, kvResult] = await Promise.all([
+  const [prismaResult, redisResult, kvResult] = await Promise.all([
     prisma.activity.createMany({
       data: events.result.transfers.map((tx, i) => {
         return {
@@ -44,11 +48,15 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
       }),
       skipDuplicates: true,
     }),
+    upstashRest(cmd),
     bulkWrite(bulk),
   ]);
 
   logger.log(
     `${Key.ALCHEMY}:::1:::${address} Created ${prismaResult.count} activities on prisma`,
+  );
+  logger.log(
+    `${Key.ALCHEMY}:::1:::${address} Created ${redisResult.result} activities on redis`,
   );
   logger.log(`${Key.ALCHEMY}:::1:::${address} Resulted ${kvResult} on kv`);
 };

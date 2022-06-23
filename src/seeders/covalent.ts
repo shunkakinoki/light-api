@@ -7,6 +7,7 @@ import { DataType } from "@prisma/client";
 import { Key } from "@lightdotso/api/config/key";
 import { bulkWrite } from "@lightdotso/api/libs/cf/bulk";
 import prisma from "@lightdotso/api/libs/prisma";
+import { upstashRest } from "@lightdotso/api/libs/upstash";
 import { castAddress } from "@lightdotso/api/utils/castAddress";
 
 export const seedCovalent = async (
@@ -33,16 +34,19 @@ export const seedCovalent = async (
     );
 
     const bulk = [];
+    const cmd = ["HMSET"];
     for (const tx of txs[pageNumber].data.items) {
-      bulkWrite([
-        {
-          key: `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`,
-          value: JSON.stringify(tx),
-        },
-      ]);
+      bulk.push({
+        key: `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`,
+        value: JSON.stringify(tx),
+      });
+      cmd.push(
+        `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`,
+        JSON.stringify(tx),
+      );
     }
 
-    const [prismaResult, kvResult] = await Promise.all([
+    const [prismaResult, redisResult, kvResult] = await Promise.all([
       prisma.activity.createMany({
         data: txs[pageNumber].data.items.map(tx => {
           return {
@@ -56,11 +60,15 @@ export const seedCovalent = async (
         }),
         skipDuplicates: true,
       }),
+      upstashRest(cmd),
       bulkWrite(bulk),
     ]);
 
     logger.log(
       `${Key.COVALENT}:::${networkId}:::${address} Created ${prismaResult.count} activities on prisma`,
+    );
+    logger.log(
+      `${Key.OPEN_SEA}:::1:::${address} Created ${redisResult.result} activities on redis`,
     );
     logger.log(
       `${Key.COVALENT}:::${networkId}:::${address} Resulted ${kvResult} on kv`,
