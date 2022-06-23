@@ -27,11 +27,12 @@ export const seedAlchemy = async (address: string, logger?: LoggerService) => {
   const bulk = [];
   const cmd = ["MSET"];
   for (const event of events.result.transfers) {
+    const key = `${Key.ALCHEMY}:::1:::${event.hash}`;
     bulk.push({
-      key: `${Key.ALCHEMY}:::1:::${event.hash}`,
+      key: key,
       value: JSON.stringify(event),
     });
-    cmd.push(`${Key.ALCHEMY}:::1:::${event.hash}`, JSON.stringify(event));
+    cmd.push(key, JSON.stringify(event));
   }
 
   const [prismaResult, redisResult, kvResult] = await Promise.all([

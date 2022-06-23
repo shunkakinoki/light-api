@@ -21,11 +21,12 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
   const bulk = [];
   const cmd = ["MSET"];
   for (const vote of votes.votes) {
+    const key = `${Key.SNAPSHOT}:::0:::${vote.id}`;
     bulk.push({
-      key: `${Key.SNAPSHOT}:::0:::${vote.id}`,
+      key: key,
       value: JSON.stringify(vote),
     });
-    cmd.push(`${Key.SNAPSHOT}:::0:::${vote.id}`, JSON.stringify(vote));
+    cmd.push(key, JSON.stringify(vote));
   }
 
   const [activityResult, networkResult, redisResult, kvResult] =

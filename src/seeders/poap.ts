@@ -19,14 +19,14 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
   const bulk = [];
   const cmd = ["MSET"];
   for (const poap of poaps) {
+    const key = `${Key.POAP}:::${poap.chain === "xdai" ? 100 : 1}:::${
+      poap.tokenId
+    }`;
     bulk.push({
-      key: `${Key.POAP}:::${poap.chain === "xdai" ? 100 : 1}:::${poap.tokenId}`,
+      key: key,
       value: JSON.stringify(poap),
     });
-    cmd.push(
-      `${Key.POAP}:::${poap.chain === "xdai" ? 100 : 1}`,
-      JSON.stringify(poap),
-    );
+    cmd.push(key, JSON.stringify(poap));
   }
 
   const [activityResult, networkResult, redisResult, kvResult] =
@@ -66,7 +66,7 @@ export const seedPoap = async (address: string, logger?: LoggerService) => {
     `${Key.POAP}:::100:::${address} Created ${networkResult.count} networks on prisma`,
   );
   logger.log(
-    `${Key.SNAPSHOT}:::0:::${address} Created ${redisResult.result} on redis`,
+    `${Key.SNAPSHOT}:::100:::${address} Created ${redisResult.result} on redis`,
   );
   logger.log(`${Key.POAP}:::100:::${address} Resulted ${kvResult} on kv`);
 };

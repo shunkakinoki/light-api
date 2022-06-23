@@ -39,27 +39,22 @@ export const seedOpensea = async (
         event?.asset?.asset_contract?.address &&
         event?.asset?.token_id
       ) {
+        const key = `${Key.OPEN_SEA}:::1:::${event?.transaction?.transaction_hash}:::${event?.asset?.asset_contract?.address}:::${event?.asset?.token_id}`;
         bulk.push({
-          key: `${Key.OPEN_SEA}:::1:::${event?.transaction?.transaction_hash}:::${event?.asset?.asset_contract?.address}:::${event?.asset?.token_id}`,
+          key: key,
           value: JSON.stringify(event),
         });
-        cmd.push(
-          `${Key.OPEN_SEA}:::1:::${event?.transaction?.transaction_hash}:::${event?.asset?.asset_contract?.address}:::${event?.asset?.token_id}`,
-          JSON.stringify(event),
-        );
+        cmd.push(key, JSON.stringify(event));
       }
+
+      const key = `${Key.OPEN_SEA}:::${
+        event?.transaction?.transaction_hash ? 1 : 0
+      }:::${String(event.id)}`;
       bulk.push({
-        key: `${Key.OPEN_SEA}:::${
-          event?.transaction?.transaction_hash ? 1 : 0
-        }:::${String(event.id)}`,
+        key: key,
         value: JSON.stringify(event),
       });
-      cmd.push(
-        `${Key.OPEN_SEA}:::${
-          event?.transaction?.transaction_hash ? 1 : 0
-        }:::${String(event.id)}`,
-        JSON.stringify(event),
-      );
+      cmd.push(key, JSON.stringify(event));
     }
 
     const [prismaResult, redisResult, kvResult] = await Promise.all([

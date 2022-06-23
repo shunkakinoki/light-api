@@ -36,14 +36,12 @@ export const seedCovalent = async (
     const bulk = [];
     const cmd = ["HMSET"];
     for (const tx of txs[pageNumber].data.items) {
+      const key = `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`;
       bulk.push({
-        key: `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`,
+        key: key,
         value: JSON.stringify(tx),
       });
-      cmd.push(
-        `${Key.COVALENT}:::${networkId}:::${tx.tx_hash}`,
-        JSON.stringify(tx),
-      );
+      cmd.push(key, JSON.stringify(tx));
     }
 
     const [prismaResult, redisResult, kvResult] = await Promise.all([
