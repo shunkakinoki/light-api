@@ -3,7 +3,8 @@ import type { LoggerService } from "@nestjs/common";
 import { Logger } from "@nestjs/common";
 import { CategoryType, DataType } from "@prisma/client";
 
-import { Upstash } from "@lightdotso/api/config/upstash";
+import { Key } from "@lightdotso/api/config/key";
+import { bulkWrite } from "@lightdotso/api/libs/cf/bulk";
 import prisma from "@lightdotso/api/libs/prisma";
 import { upstashRest } from "@lightdotso/api/libs/upstash";
 import { castAddress } from "@lightdotso/api/utils/castAddress";
@@ -13,42 +14,59 @@ export const seedSnapshot = async (address: string, logger?: LoggerService) => {
     logger = new Logger("seedSnapshot");
   }
   const votes = await fetchSnapshotVotes(address);
-  logger.log(`Found ${votes.votes.length} events`);
+  logger.log(
+    `${Key.SNAPSHOT}:::0:::${address} Found ${votes.votes.length} events`,
+  );
 
+  const bulk = [];
   const cmd = ["MSET"];
   for (const vote of votes.votes) {
-    cmd.push(`${Upstash.SNAPSHOT}:::${vote.id}`, JSON.stringify(vote));
+    const key = `${Key.SNAPSHOT}:::0:::${vote.id}`;
+    bulk.push({
+      key: key,
+      value: JSON.stringify(vote),
+    });
+    cmd.push(key, JSON.stringify(vote));
   }
 
-  const [activityResult, networkResult, redisResult] = await Promise.all([
-    prisma.activity.createMany({
-      data: votes.votes.map(vote => {
-        return {
-          address: castAddress(vote.voter),
-          category: CategoryType.DAO,
-          chainId: 0,
-          createdAt: new Date(vote.created * 1000),
-          id: vote.id,
-          type: DataType.SNAPSHOT,
-        };
+  const [activityResult, networkResult, redisResult, kvResult] =
+    await Promise.all([
+      prisma.activity.createMany({
+        data: votes.votes.map(vote => {
+          return {
+            address: castAddress(vote.voter),
+            category: CategoryType.DAO,
+            chainId: 0,
+            createdAt: new Date(vote.created * 1000),
+            id: vote.id,
+            type: DataType.SNAPSHOT,
+          };
+        }),
+        skipDuplicates: true,
       }),
-      skipDuplicates: true,
-    }),
-    prisma.network.createMany({
-      data: votes.votes.map(vote => {
-        return {
-          name: vote.space.name,
-          image_url: vote.space.avatar,
-          key: vote.space.id,
-          type: DataType.POAP,
-        };
+      prisma.network.createMany({
+        data: votes.votes.map(vote => {
+          return {
+            name: vote.space.name,
+            image_url: vote.space.avatar,
+            key: vote.space.id,
+            type: DataType.POAP,
+          };
+        }),
+        skipDuplicates: true,
       }),
-      skipDuplicates: true,
-    }),
-    upstashRest(cmd),
-  ]);
+      upstashRest(cmd),
+      bulkWrite(bulk),
+    ]);
 
-  logger.log(`Created ${activityResult.count} activities on prisma`);
-  logger.log(`Created ${networkResult.count} networks on prisma`);
-  logger.log(`Resulted ${redisResult.result} on redis`);
+  logger.log(
+    `${Key.SNAPSHOT}:::0:::${address} Created ${activityResult.count} activities on prisma`,
+  );
+  logger.log(
+    `${Key.SNAPSHOT}:::0:::${address} Created ${networkResult.count} networks on prisma`,
+  );
+  logger.log(
+    `${Key.SNAPSHOT}:::0:::${address} Created ${redisResult.result} on redis`,
+  );
+  logger.log(`${Key.SNAPSHOT}:::0:::${address} Resulted ${kvResult} on kv`);
 };

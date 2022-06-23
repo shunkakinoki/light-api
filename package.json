@@ -2,17 +2,18 @@
   "name": "@lightdotso/api",
   "version": "0.0.0",
   "private": true,
-  "homepage": "https://github.com/LightDotSo/LightDotSo",
+  "homepage": "https://github.com/LightDotSo/api",
   "bugs": {
-    "url": "https://github.com/LightDotSo/LightDotSo/issues"
+    "url": "https://github.com/LightDotSo/api/issues"
   },
-  "repository": "https://github.com/LightDotSo/LightDotSo",
+  "repository": "https://github.com/LightDotSo/api",
   "license": "UNLICENSED",
   "author": "Light, Inc.",
   "main": "dist/worker.js",
   "scripts": {
     "build": "pnpm run clean && pnpm run prisma:cp && pnpm run prisma:generate && pnpm run next:build || pnpm run nest:build",
     "build:cache": "webpack -c webpack.cache.js",
+    "build:kv": "webpack -c webpack.kv.js",
     "build:image": "webpack -c webpack.image.js",
     "clean": "rimraf -rf ./dist",
     "cypress:ci": "cypress run --record",
@@ -20,6 +21,7 @@
     "cypress:run": "cypress run",
     "dev": "next dev",
     "dev:cache": "miniflare --watch -c wrangler.cache.toml",
+    "dev:kv": "miniflare --watch -c wrangler.kv.toml",
     "dev:image": "miniflare --watch -c wrangler.image.toml",
     "env:local": "doppler secrets download --no-file --format env > .env.local",
     "env:prisma": "doppler secrets download --no-file --format env > prisma/.env",

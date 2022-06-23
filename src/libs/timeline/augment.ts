@@ -1,16 +1,20 @@
 import type { Timeline } from "@prisma/client";
 
-import { upstashRest } from "@lightdotso/api/libs/upstash";
+import { bulkRead } from "@lightdotso/api/libs/cf/bulk";
 
 export const augmentTimeline = async (timeline: Timeline[]) => {
   const cmd = ["MGET"];
   for (const item of timeline) {
     cmd.push(`${item.type.toLowerCase()}:::${item.chainId}:::${item.id}`);
   }
-  const data = await upstashRest(cmd);
+  const res = await bulkRead(cmd);
+  const json = (await res.json()) as string;
+  const data = JSON.stringify(json);
 
   const result = timeline.map((item, index) => {
-    return Object.assign({}, item, { data: JSON.parse(data.result[index]) });
+    let dict = {};
+    dict[item.type.toLowerCase()] = JSON.parse(data)[index];
+    return Object.assign({}, item, dict);
   });
 
   return result;

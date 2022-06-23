@@ -11,7 +11,7 @@ import { validator } from "@lightdotso/api/utils/validator";
 
 const getHandler: NextApiHandler = async (req, res) => {
   const { address, cursor } = validator(openseaEventsQuerySchema, req.query);
-  const result = await fetchOpenseaEvents(address);
+  const result = await fetchOpenseaEvents(address, cursor);
   const safeResult: OpenseaEvents = validator(openseaEventsSchema, result);
   res.json(safeResult);
 };
