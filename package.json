@@ -27,6 +27,7 @@
     "env:prisma": "doppler secrets download --no-file --format env > prisma/.env",
     "env:vercel": "vercel pull --env .env.local",
     "fix": "cd ../.. && pnpm run fix",
+    "prepare": "husky install",
     "prisma:cp": "cp ../../packages/prisma/schema.prisma prisma/schema.prisma",
     "prisma:db:push": "prisma db push",
     "prisma:generate": "prisma generate",
