@@ -10,6 +10,10 @@ export const augmentTimeline = async (timeline: Timeline[]) => {
   const data = await upstashRest(cmd);
 
   const result = timeline.map((item, index) => {
+    if (!data.result[index]) {
+      return;
+    }
+
     let dict = {};
     dict[item.type.toLowerCase()] = JSON.parse(data.result[index]);
     return Object.assign({}, item, dict);
