@@ -10,7 +10,7 @@ import { PrismaModule } from "@lightdotso/api/worker/prisma/prisma.module";
   imports: [
     BullModule.registerQueue({
       name: "timeline",
-      limiter: { max: 5, duration: 1000 },
+      limiter: { max: 5, duration: 3000 },
     }),
     PrismaModule,
   ],

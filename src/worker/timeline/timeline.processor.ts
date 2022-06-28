@@ -42,35 +42,35 @@ export class TimelineProcessor extends BaseProcessor {
       );
     }
 
-    const jobs = await this.timelineQueue.getJobs(["waiting"]);
-    this.logger.log(
-      `Jobs: ${jobs.length > 3 ? JSON.stringify(jobs.slice(0, 3)) : jobs}:`,
-    );
-    const isWaiting = jobs.some(waitingJob => {
-      if (waitingJob.data.networkId) {
-        return (
-          job.data.networkId === waitingJob.data.networkId &&
-          job.data.address === waitingJob.data.address
-        );
-      }
-      return job.data.address === waitingJob.data.address;
-    });
+    // const jobs = await this.timelineQueue.getJobs(["waiting"]);
+    // this.logger.log(
+    //   `Jobs: ${jobs.length > 3 ? JSON.stringify(jobs.slice(0, 3)) : jobs}:`,
+    // );
+    // const isWaiting = jobs.some(waitingJob => {
+    //   if (waitingJob.data.networkId) {
+    //     return (
+    //       job.data.networkId === waitingJob.data.networkId &&
+    //       job.data.address === waitingJob.data.address
+    //     );
+    //   }
+    //   return job.data.address === waitingJob.data.address;
+    // });
 
-    if (isWaiting) {
-      this.logger.log(`Found same jobs: removing...`);
-      const sameJobs = jobs.filter(waitingJob => {
-        if (waitingJob.data.networkId) {
-          return (
-            job.data.networkId === waitingJob.data.networkId &&
-            job.data.address === waitingJob.data.address
-          );
-        }
-        return job.data.address === waitingJob.data.address;
-      });
-      this.logger.log(`Same jobs: ${JSON.stringify(sameJobs)}`);
-      sameJobs.forEach(async sameJob => {
-        await sameJob.remove();
-      });
-    }
+    // if (isWaiting) {
+    //   this.logger.log(`Found same jobs: removing...`);
+    //   const sameJobs = jobs.filter(waitingJob => {
+    //     if (waitingJob.data.networkId) {
+    //       return (
+    //         job.data.networkId === waitingJob.data.networkId &&
+    //         job.data.address === waitingJob.data.address
+    //       );
+    //     }
+    //     return job.data.address === waitingJob.data.address;
+    //   });
+    //   this.logger.log(`Same jobs: ${JSON.stringify(sameJobs)}`);
+    //   sameJobs.forEach(async sameJob => {
+    //     await sameJob.remove();
+    //   });
+    // }
   }
 }
