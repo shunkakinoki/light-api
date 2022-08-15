@@ -3,6 +3,7 @@ import * as cfw from "worktop/cfw";
 import * as Cache from "worktop/cfw.cache";
 import * as CORS from "worktop/cors";
 
+import * as Galaxy from "./routes/galaxy";
 import * as Network from "./routes/network";
 import * as Poap from "./routes/poap";
 import * as Snapshot from "./routes/snapshot";
@@ -26,6 +27,7 @@ API.onerror = function (req, context) {
 };
 
 API.add("GET", "/poap/:address", Poap.get);
+API.add("GET", "/galaxy/:address", Galaxy.list);
 API.add("GET", "/snapshot/:address", Snapshot.list);
 API.add("GET", "/network/:address", Network.list);
 API.add("GET", "/network/raw/:address", Network.raw);
