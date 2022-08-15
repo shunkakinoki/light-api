@@ -1,1 +1,1 @@
-# api
+# @lightdotso/api
