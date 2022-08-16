@@ -14,7 +14,7 @@ export const fetchGalaxyCampaign = (oatId: string) => {
     body: JSON.stringify({
       query: GALAXY_CAMPAIGN_QUERY,
       variables: {
-        id: oatId,
+        oatId: oatId,
       },
     }),
   });
