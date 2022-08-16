@@ -27,8 +27,8 @@ API.onerror = function (req, context) {
 };
 
 API.add("GET", "/poap/:address", Poap.get);
-API.add("GET", "/galaxy/:address", Galaxy.list);
 API.add("GET", "/galaxy/campaign/:oatId", Galaxy.get);
+API.add("GET", "/galaxy/:address", Galaxy.list);
 API.add("GET", "/snapshot/:address", Snapshot.list);
 API.add("GET", "/network/:address", Network.list);
 API.add("GET", "/network/raw/:address", Network.raw);
