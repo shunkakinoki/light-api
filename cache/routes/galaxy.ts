@@ -3,9 +3,10 @@
 import { compose } from "worktop";
 
 import { fetchGalaxyCampaign, fetchGalaxyOats } from "../models/galaxy";
+import { emptyHandler } from "../utils/empty";
 import { addressValidator } from "../utils/validator";
 
-export const get = compose(undefined, async (req, context) => {
+export const get = compose(emptyHandler, async (req, context) => {
   const oatId = context.params.oatId as string;
 
   const result = await fetchGalaxyCampaign(oatId);
