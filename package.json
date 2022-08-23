@@ -101,7 +101,7 @@
     "@types/passport-http": "^0.3.9",
     "@types/react": "^18.0.17",
     "cypress": "^10.6.0",
-    "miniflare": "^2.7.0",
+    "miniflare": "^2.7.1",
     "supertest": "^6.2.4",
     "ts-loader": "^9.3.1",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
