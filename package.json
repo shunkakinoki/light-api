@@ -27,6 +27,9 @@
     "env:local": "doppler secrets download --no-file --format env > .env.local",
     "env:prisma": "doppler secrets download --no-file --format env > prisma/.env",
     "env:vercel": "vercel pull --env .env.local",
+    "eslint:cmd": "cd ../.. && pnpm run eslint:cmd",
+    "eslint:fix": "cd ../.. && pnpm run eslint:fix",
+    "eslint:lint": "cd ../.. && pnpm run eslint:lint",
     "fix": "cd ../.. && pnpm run fix",
     "prepare": "husky install",
     "prisma:cp": "cp ../../packages/prisma/schema.prisma prisma/schema.prisma",
@@ -40,6 +43,10 @@
     "next:build": "next build",
     "next:dev": "next dev",
     "next:start": "next start",
+    "prettier:cmd": "prettier",
+    "prettier:fix": "prettier --write .",
+    "prettier:lint": "prettier --check .",
+    "npm-package-json:lint": "npmPkgJsonLint .",
     "start": "pnpm run next:start"
   },
   "dependencies": {
