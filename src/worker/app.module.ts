@@ -3,6 +3,7 @@ import { LogtailTransport } from "@logtail/winston";
 import { BullModule } from "@nestjs/bull";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { MongooseModule } from "@nestjs/mongoose";
 import { ScheduleModule } from "@nestjs/schedule";
 
 import { SentryModule } from "@ntegral/nestjs-sentry";
@@ -58,6 +59,7 @@ import { TimelineModule } from "@lightdotso/api/worker/timeline/timeline.module"
         tls: {},
       },
     }),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     ScheduleModule.forRoot(),
     AuthModule,
     BullBoardModule,
