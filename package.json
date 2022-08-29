@@ -10,7 +10,6 @@
   "license": "UNLICENSED",
   "author": "Light, Inc.",
   "main": "dist/worker.js",
-  "type": "module",
   "scripts": {
     "build": "pnpm run clean && pnpm run prisma:cp && pnpm run prisma:generate && pnpm run next:build || pnpm run nest:build",
     "build:cache": "webpack -c webpack.cache.js",
