@@ -1,26 +1,5 @@
 [
   {
-    "_id": "7cb9a900-036c-45c6-b702-a7fce32a5aa0",
-    "colId": "history",
-    "containerId": "",
-    "name": "https://worker.light.so/queue/waiting",
-    "url": "https://worker.light.so/queue/waiting",
-    "method": "GET",
-    "sortNum": 0,
-    "created": "2022-06-28T19:46:46.381Z",
-    "modified": "2022-06-28T19:56:27.140Z",
-    "headers": [],
-    "params": [],
-    "auth": {
-      "type": "basic",
-      "basic": {
-        "username": "test",
-        "password": "test"
-      }
-    },
-    "tests": []
-  },
-  {
     "_id": "610a20a5-d77f-4967-95a3-4f1b6a29095b",
     "colId": "history",
     "containerId": "",
